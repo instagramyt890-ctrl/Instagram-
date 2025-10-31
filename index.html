@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SECURETOOLS.IO — Secure Checkout & UPI Payment</title>
+  <meta name="description" content="Pay securely for cybersecurity & privacy services via UPI — SECURETOOLS.IO official checkout.">
+  <meta name="theme-color" content="#071022">
+  <style>
+    :root{
+      --accent:#ff6b6b; --bg:#071022; --card:#0b1220; --muted:#9aa4b2; --glass:rgba(255,255,255,0.03);
+      font-family:Inter,system-ui,Arial,sans-serif;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071022,#0b1220);color:#e6eef6;scroll-behavior:smooth}
+    .wrap{max-width:980px;margin:20px auto;padding:16px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    h1{margin:0;font-size:20px;letter-spacing:3px;background:linear-gradient(90deg,#fff,#cfe8ff);-webkit-background-clip:text;color:transparent;text-transform:uppercase}
+    .subtitle{font-size:12px;color:var(--muted)}
+    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);margin-top:14px;animation:fadeIn 0.4s ease}
+    .services ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+    .services li{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:var(--glass)}
+    .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:0.2s}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#ff914d);color:#fff}
+    .btn-primary:active{transform:scale(0.97)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.1);padding:8px 10px;border-radius:8px}
+    .tiny{font-size:13px;color:var(--muted)}
+    .hidden{display:none}
+    .center{text-align:center}
+    label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
+    input[type="tel"],input[type="text"]{
+      width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#e6eef6;margin-top:6px;font-size:15px
+    }
+    .row{display:flex;gap:8px;margin-top:12px}
+    .row .btn{flex:1}
+    footer{margin-top:80px;text-align:center;color:var(--muted);font-size:12px}
+    /* bottom bar */
+    .bottom-bar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;align-items:center;padding:10px;background:linear-gradient(180deg,rgba(2,6,23,0.6),rgba(2,6,23,0.95));box-shadow:0 -8px 30px rgba(0,0,0,0.6);backdrop-filter:blur(10px)}
+    .pay-icon{display:flex;flex-direction:column;align-items:center;gap:6px;color:#e6eef6;text-decoration:none;font-size:12px;transition:0.2s}
+    .icon{width:52px;height:52px;border-radius:10px;background:#071d2b;display:flex;align-items:center;justify-content:center;font-weight:800;transition:0.2s}
+    .pay-icon:active .icon{background:var(--accent);color:#fff;transform:scale(0.95)}
+    .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px}
+    .qr-box{padding:14px;border-radius:12px;background:linear-gradient(180deg,#071d2b,#04202a);display:inline-block}
+    img.qr{width:240px;height:240px;border-radius:8px;display:block}
+    .small-note{font-size:12px;color:#b7c8d9;margin-top:8px}
+    @media(max-width:520px){img.qr{width:200px;height:200px}.icon{width:44px;height:44px}.wrap{padding:12px}}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>SECURETOOLS.IO</h1>
+        <div class="subtitle">ethical security • audit • awareness</div>
+      </div>
+      <div class="tiny">INTERNATIONAL IP</div>
+    </header>
+
+    <!-- PAGE 1 -->
+    <section id="page-services" class="card services">
+      <h2>Services</h2>
+      <p class="tiny">यह केवल कानूनी और शैक्षिक सेवाएँ हैं।</p>
+      <ul>
+        <li><span>Instagram account security audit — ₹499</span><button class="btn btn-primary" data-svc="Instagram audit|499" onclick="selectService(event)">Buy</button></li>
+        <li><span>Facebook account hardening — ₹499</span><button class="btn btn-primary" data-svc="Facebook audit|499" onclick="selectService(event)">Buy</button></li>
+        <li><span>WhatsApp privacy workshop — ₹299</span><button class="btn btn-primary" data-svc="WhatsApp workshop|299" onclick="selectService(event)">Buy</button></li>
+        <li><span>Call recording compliance review — ₹699</span><button class="btn btn-primary" data-svc="Call recording review|699" onclick="selectService(event)">Buy</button></li>
+        <li><span>Phishing awareness training — ₹399</span><button class="btn btn-primary" data-svc="Phishing training|399" onclick="selectService(event)">Buy</button></li>
+      </ul>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section id="page-checkout" class="card hidden">
+      <h2>Checkout</h2>
+      <div id="chosenSvc" class="tiny">— सेवा चुनी नहीं गई —</div>
+      <label>Mobile number (contact)</label>
+      <input type="tel" id="mobile" placeholder="91xxxxxxxxxx" inputmode="numeric"/>
+      <label>आपका नाम (optional)</label>
+      <input type="text" id="buyerName" placeholder="आपका नाम"/>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="goTo('services')">Back</button>
+        <button class="btn btn-primary" onclick="proceedToPayment()">Proceed to Pay</button>
+      </div>
+      <div class="small-note">अगले पेज पर केवल QR दिखेगा — UPI ID टेक्स्ट में नहीं।</div>
+    </section>
+
+    <!-- PAGE 3 -->
+    <section id="page-payment" class="card hidden center">
+      <h2>UPI पेमेंट</h2>
+      <div id="payLine" class="tiny">कृपया नीचे दिए गए QR से भुगतान करें।</div>
+      <div class="qr-wrap">
+        <div class="qr-box">
+          <img id="qrimg" class="qr" src="" alt="UPI QR"/>
+        </div>
+        <div class="small-note">अपने UPI ऐप (GPay, PhonePe, PayTM आदि) से QR स्कैन करें।</div>
+        <div style="margin-top:8px">
+          <button class="btn btn-primary" id="paidBtn">मैंने भुगतान किया</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4 -->
+    <section id="page-success" class="card hidden center">
+      <h2>भुगतान सफल ✅</h2>
+      <p>धन्यवाद! आपकी सेवा सक्रिय हो गई है। हमारी टीम शीघ्र संपर्क करेगी।</p>
+      <button class="btn btn-primary" onclick="resetAndGoHome()">मुख्य पेज पर जाएँ</button>
+    </section>
+
+    <footer>© <span id="year"></span> SECURETOOLS.IO — शैक्षिक उपयोग हेतु पेज।</footer>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <a href="#" id="gpayBtn" class="pay-icon"><div class="icon">G</div><div>GPay</div></a>
+    <a href="#" id="phonepeBtn" class="pay-icon"><div class="icon">P</div><div>PhonePe</div></a>
+    <a href="#" id="upiBtn" class="pay-icon"><div class="icon">U</div><div>UPI</div></a>
+  </div>
+
+  <script>
+    const UPI_ID='8955337410@ybl';
+    const PAYEE_NAME='SECURETOOLS.IO';
+
+    function goTo(p){
+      ['page-services','page-checkout','page-payment','page-success'].forEach(id=>{
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById('page-'+p).classList.remove('hidden');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function selectService(e){
+      const svc=e.currentTarget.getAttribute('data-svc');
+      window.__selectedSvc=svc;
+      const [name,price]=svc.split('|');
+      document.getElementById('chosenSvc').textContent=name+' • ₹'+price;
+      goTo('checkout');
+    }
+
+    function proceedToPayment(){
+      const mob=document.getElementById('mobile').value.trim();
+      if(!/^[0-9]{10,13}$/.test(mob)){alert('कृपया वैध मोबाइल नंबर डालें।');return;}
+      window.__buyer={name:document.getElementById('buyerName').value.trim(),mobile:mob};
+      generateAndShowQr();
+      goTo('payment');
+    }
+
+    function buildUpiUri(){
+      const svc=window.__selectedSvc||'';
+      const amt=svc.split('|')[1]||'';
+      let uri='upi://pay?pa='+encodeURIComponent(UPI_ID)+'&pn='+encodeURIComponent(PAYEE_NAME)+'&cu=INR';
+      if(amt) uri+='&am='+encodeURIComponent(amt);
+      return uri;
+    }
+
+    function qrImageUrl(uri,size=440){
+      return 'https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(uri);
+    }
+
+    function generateAndShowQr(){
+      const uri=buildUpiUri();
+      document.getElementById('qrimg').src=qrImageUrl(uri,440)+'&t='+Date.now();
+      const svc=window.__selectedSvc||'';
+      const [name,price]=svc.split('|');
+      document.getElementById('payLine').textContent=name+' — ₹'+price;
+    }
+
+    function upiIntentUri(){return buildUpiUri();}
+
+    ['gpayBtn','phonepeBtn','upiBtn'].forEach(id=>{
+      document.getElementById(id).addEventListener('click',e=>{
+        e.preventDefault();
+        window.location.href=upiIntentUri();
+        setTimeout(()=>alert('यदि ऐप नहीं खुला, तो अपने UPI ऐप से QR स्कैन करें।'),900);
+      });
+    });
+
+    document.getElementById('paidBtn').addEventListener('click',()=>goTo('success'));
+
+    function resetAndGoHome(){
+      window.__selectedSvc=null;window.__buyer=null;
+      document.getElementById('mobile').value='';
+      document.getElementById('buyerName').value='';
+      document.getElementById('chosenSvc').textContent='— सेवा चुनी नहीं गई —';
+      goTo('services');
+    }
+
+    document.getElementById('year').textContent=new Date().getFullYear();
+    (function ensureFooterSpace(){
+      const bar=document.querySelector('.bottom-bar');
+      const f=document.querySelector('footer');
+      if(bar&&f) f.style.marginBottom=(bar.offsetHeight+20)+'px';
+      window.addEventListener('resize',()=>{if(bar&&f)f.style.marginBottom=(bar.offsetHeight+20)+'px';});
+    })();
+  </script>
+</body>
+</html>
