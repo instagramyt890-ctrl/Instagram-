@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SECURETOOLS.IO — Secure UPI Checkout</title>
+  <meta name="description" content="Pay securely for verified cybersecurity & awareness services via UPI — official SECURETOOLS.IO checkout.">
+  <meta name="author" content="SECURETOOLS.IO">
+  <meta name="theme-color" content="#071022">
+  <meta property="og:title" content="Secure UPI Payment — SECURETOOLS.IO">
+  <meta property="og:description" content="Pay safely for cybersecurity & awareness services via UPI.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://securetools.io/assets/banner.png">
+  <meta property="og:url" content="https://securetools.io/checkout">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.ico">
+
+  <style>
+    :root{
+      --accent:#ff6b6b;
+      --accent-2:#ff914d;
+      --bg-1:#071022;
+      --bg-2:#0b1220;
+      --card:#0f1724;
+      --muted:#9aa4b2;
+      --glass:rgba(255,255,255,0.03);
+      --glass-2:rgba(255,255,255,0.02);
+      --success:#28c76f;
+      font-family:Inter,system-ui,Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#e6eef6;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    main{max-width:980px;margin:18px auto;padding:18px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    h1{margin:0;font-size:22px;letter-spacing:3px;background:linear-gradient(90deg,#fff,#cfe8ff);-webkit-background-clip:text;color:transparent;text-transform:uppercase}
+    .subtitle{font-size:13px;color:var(--muted)}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.6);margin-top:14px;transition:transform .22s ease,opacity .22s ease}
+    .hidden{display:none;opacity:0;transform:translateY(8px)}
+    .services ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+    .services li{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,var(--glass),var(--glass-2));border:1px solid rgba(255,255,255,0.02)}
+    .btn{padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700;transition:transform .12s ease,box-shadow .12s ease}
+    .btn:active{transform:scale(0.985)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 6px 18px rgba(255,107,107,0.08)}
+    .btn-primary:hover{filter:brightness(1.03);box-shadow:0 8px 22px rgba(255,107,107,0.12)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px}
+    .tiny{font-size:13px;color:var(--muted)}
+    .center{text-align:center}
+    label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
+    input[type="tel"],input[type="text"]{
+      width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#e6eef6;margin-top:6px;font-size:15px;
+    }
+    .row{display:flex;gap:8px;margin-top:12px}
+    .row .btn{flex:1}
+    footer{margin-top:80px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6}
+    footer a{color:var(--muted);text-decoration:none}
+    footer a:hover{text-decoration:underline}
+    .pay-grid{display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+    .pay-card{width:120px;padding:12px;border-radius:12px;background:linear-gradient(180deg,#071d2b,#04202a);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:2px solid transparent;transition:transform .14s ease,box-shadow .14s ease}
+    .pay-card .logo{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;background:#072431}
+    .pay-card.selected{border-color:rgba(255,107,107,0.28);box-shadow:0 10px 28px rgba(0,0,0,0.6);transform:translateY(-6px)}
+    .pay-label{font-size:13px;color:#e6eef6}
+    .pay-sub{font-size:12px;color:var(--muted)}
+    .pay-row{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;margin-top:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .qr-box{padding:8px;border-radius:12px;background:linear-gradient(180deg,#071d2b,#04202a);display:inline-block}
+    img.qr{width:240px;height:240px;border-radius:8px;display:block}
+    .small-note{font-size:12px;color:#b7c8d9;margin-top:8px;text-align:center}
+    .muted-inline{color:var(--muted);font-size:13px}
+    .tag{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:12px;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+    .glow{box-shadow:0 8px 26px rgba(255,107,107,0.06);border-radius:12px}
+    .fade-in {animation:fadeIn .28s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .pill{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:13px}
+    .success-badge{display:inline-block;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,#1fd67a,#12b86a);color:#042014;font-weight:700}
+    @media(max-width:520px){
+      h1{font-size:18px}
+      header{flex-direction:column;align-items:flex-start}
+      .pay-card{width:92px;padding:8px}
+      img.qr{width:180px;height:180px}
+      .row{flex-direction:column}
+      main{padding:12px}
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>SECURETOOLS.IO</h1>
+        <div class="subtitle">ethical security • audit • awareness</div>
+      </div>
+      <div class="tiny">INTERNATIONAL IP</div>
+    </header>
+
+    <!-- PAGE: Services -->
+    <section id="page-services" class="card services fade-in" role="region" aria-label="Service selection">
+      <h2>Services</h2>
+      <p class="tiny">All services are legal, ethical and for awareness / professional security.</p>
+      <ul>
+        <li>
+          <div>
+            <strong>Instagram account security audit</strong><div class="muted-inline">— quick review & recommendations</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹1</span>
+            <button class="btn btn-primary" data-svc="Instagram account security audit|1" aria-label="Buy Instagram audit">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Facebook account tool hardening</strong><div class="muted-inline">— privacy & login hardening</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹499</span>
+            <button class="btn btn-primary" data-svc="Facebook account tool hardening|499" aria-label="Buy Facebook audit">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>WhatsApp account tool</strong><div class="muted-inline">— personal & group privacy tips</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹299</span>
+            <button class="btn btn-primary" data-svc="WhatsApp account tool|299" aria-label="Buy WhatsApp workshop">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Call recording account tool</strong><div class="muted-inline">— legal & ethical guidance</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹699</span>
+            <button class="btn btn-primary" data-svc="Call recording account tool|699" aria-label="Buy call review">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Phishing io tool</strong><div class="muted-inline">— simulated phishing & lessons</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹399</span>
+            <button class="btn btn-primary" data-svc="Phishing io tool|399" aria-label="Buy phishing training">Buy</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- PAGE: Checkout -->
+    <section id="page-checkout" class="card hidden" role="region" aria-label="Checkout details">
+      <h2>Checkout</h2>
+      <div id="chosenSvc" class="tiny">— service not selected —</div>
+
+      <label for="mobile">Mobile number (contact)</label>
+      <input type="tel" id="mobile" placeholder="91xxxxxxxxxx" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" aria-label="Enter mobile number" required>
+
+      <label for="buyerName">Your name (optional)</label>
+      <input type="text" id="buyerName" placeholder="Your name" aria-label="Enter your name">
+
+      <div class="row">
+        <button class="btn btn-ghost" id="btn-back-to-services">Back</button>
+        <button class="btn btn-primary" id="btn-proceed">Proceed to Pay</button>
+      </div>
+
+      <div class="small-note">Next: Choose UPI app or scan QR on the following screen. Amount will be pre-filled in UPI app.</div>
+    </section>
+
+    <!-- PAGE: Payment -->
+    <section id="page-payment" class="card hidden" role="region" aria-label="UPI payment">
+      <h2>UPI Payment</h2>
+      <div id="payIntro" class="tiny">Select a payment app then tap "Pay Now".</div>
+
+      <div class="pay-row">
+        <div class="pay-grid" id="payGrid" role="list">
+          <!-- Google Pay -->
+          <div class="pay-card" data-app="gpay" id="card-gpay" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with Google Pay">
+            <div class="logo" aria-hidden="true">
+              <!-- GPay-like stylized G (custom minimal) -->
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="24" height="24" rx="5" fill="#072431"/>
+                <path d="M6 7h6v2H8v8H6z" fill="#fff" opacity="0.9"/>
+                <circle cx="16" cy="13" r="3" fill="#ff6b6b"/>
+              </svg>
+            </div>
+            <div class="pay-label">Google Pay</div>
+            <div class="pay-sub">open GPay</div>
+          </div>
+
+          <!-- PhonePe -->
+          <div class="pay-card" data-app="phonepe" id="card-phonepe" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with PhonePe">
+            <div class="logo" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="5" fill="#072431"/>
+                <path d="M7 7h10v2H7z" fill="#fff" opacity="0.9"/>
+                <path d="M7 13h8v2H7z" fill="#12b86a"/>
+              </svg>
+            </div>
+            <div class="pay-label">PhonePe</div>
+            <div class="pay-sub">open PhonePe</div>
+          </div>
+
+          <!-- Other UPI -->
+          <div class="pay-card" data-app="upi" id="card-upi" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with any UPI app">
+            <div class="logo" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" rx="5" fill="#072431"/>
+                <path d="M7 7h10v10H7z" fill="#fff" opacity="0.9"/>
+                <path d="M9 9h6v6H9z" fill="#ff914d"/>
+              </svg>
+            </div>
+            <div class="pay-label">Other UPI</div>
+            <div class="pay-sub">open any UPI app</div>
+          </div>
+        </div>
+
+        <div style="width:100%;display:flex;justify-content:center;margin-top:12px;">
+          <button id="payNowBtn" class="btn btn-primary hidden" aria-hidden="true">Pay Now</button>
+        </div>
+
+        <div class="qr-wrap" aria-live="polite">
+          <div class="qr-box glow" id="qrBox">
+            <img id="qrimg" class="qr" src="" alt="QR code for secure UPI payment" loading="lazy">
+          </div>
+
+          <div id="payLine" class="small-note">Please scan the QR or use Pay Now.</div>
+          <div class="small-note">UPI ID: <strong id="upiText" class="muted-inline">—</strong> • Payee: <strong>SECURETOOLS.IO</strong></div>
+
+          <div style="display:flex;gap:8px;margin-top:8px;justify-content:center;flex-wrap:wrap">
+            <button id="btn-download-qr" class="btn btn-ghost" title="Download QR image">Download QR</button>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost" id="btn-back-to-checkout">Back</button>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> SECURETOOLS.IO — educational & professional cybersecurity services.<br>
+      Payments are processed securely via UPI. For support: <a href="mailto:support@securetools.io">support@securetools.io</a>
+    </footer>
+  </main>
+
+  <script>
+    /****************************************************
+     * Production-ready checkout script (updated)
+     * - Removed success page and "I paid" flow entirely
+     * - Updated service names
+     * - UPI ID obfuscated with Base64; new ID: babashyamh@axl
+     * - QR generation with prefilled amount
+     ****************************************************/
+
+    // ---------- Config ----------
+    const ENC_UPI = 'YmFiYXNoeWFtaEBheGw='; // base64 of 'babashyamh@axl'
+    const PAYEE_NAME = 'SECURETOOLS.IO';
+    const PKG_GPAY = 'com.google.android.apps.nbu.paisa.user';
+    const PKG_PHONEPE = 'com.phonepe.app';
+
+    // ---------- State ----------
+    const state = { selectedSvc: null, buyer: null, selectedApp: null, lastQrDataUrl: null };
+
+    // ---------- Cache DOM ----------
+    const pages = ['services','checkout','payment'];
+    const el = {
+      pages: pages.reduce((acc,k)=>{ acc[k]=document.getElementById('page-'+k); return acc; }, {}),
+      svcBtns: Array.from(document.querySelectorAll('[data-svc]')),
+      chosenSvc: document.getElementById('chosenSvc'),
+      mobile: document.getElementById('mobile'),
+      buyerName: document.getElementById('buyerName'),
+      btnBackToServices: document.getElementById('btn-back-to-services'),
+      btnProceed: document.getElementById('btn-proceed'),
+      payGrid: document.getElementById('payGrid'),
+      payCards: Array.from(document.querySelectorAll('.pay-card')),
+      payIntro: document.getElementById('payIntro'),
+      payNowBtn: document.getElementById('payNowBtn'),
+      qrimg: document.getElementById('qrimg'),
+      upiText: document.getElementById('upiText'),
+      payLine: document.getElementById('payLine'),
+      btnBackToCheckout: document.getElementById('btn-back-to-checkout'),
+      btnDownloadQr: document.getElementById('btn-download-qr'),
+      year: document.getElementById('year')
+    };
+
+    // ---------- Helpers ----------
+    function goTo(page){
+      pages.forEach(k => {
+        if(k===page){ el.pages[k].classList.remove('hidden'); el.pages[k].classList.add('fade-in'); }
+        else { el.pages[k].classList.add('hidden'); }
+      });
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function decodeUpi(){
+      try{
+        return atob(ENC_UPI);
+      }catch(e){ return 'babashyamh@axl'; }
+    }
+
+    function sanitizePrice(price){
+      // ensure numeric, two decimals not needed for INR as rupee integer
+      const n = parseFloat(price);
+      return isNaN(n) ? '' : Math.round(n).toString();
+    }
+
+    function buildUpiUri(){
+      const svc = state.selectedSvc || '';
+      const amt = sanitizePrice((svc.split('|')[1]||'').trim());
+      let uri = 'upi://pay?pa='+encodeURIComponent(decodeUpi())+'&pn='+encodeURIComponent(PAYEE_NAME)+'&cu=INR';
+      if(amt) uri += '&am='+encodeURIComponent(amt);
+      if(state.buyer && state.buyer.mobile) uri += '&tn='+encodeURIComponent('Order from '+state.buyer.mobile);
+      return uri;
+    }
+
+    function qrImageUrl(uri, size=440){
+      // qrserver allows size and data; add timestamp to prevent caching during testing
+      return 'https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(uri);
+    }
+
+    function generateAndShowQr(){
+      const uri = buildUpiUri();
+      const imgsrc = qrImageUrl(uri,440)+'&t='+Date.now();
+      el.qrimg.src = imgsrc;
+      const [name,price] = (state.selectedSvc||'').split('|');
+      el.payLine.textContent = (name ? name+' — ₹'+price : 'Please scan the QR or use Pay Now.');
+      el.upiText.textContent = decodeUpi();
+      // store final url for download (convert image to dataURL after load)
+      el.qrimg.onload = async () => {
+        try{
+          // convert image blob to dataURL for download
+          const resp = await fetch(el.qrimg.src);
+          const blob = await resp.blob();
+          const reader = new FileReader();
+          reader.onload = () => { state.lastQrDataUrl = reader.result; };
+          reader.readAsDataURL(blob);
+        }catch(err){
+          // ignore if blocked
+        }
+      };
+    }
+
+    function clearAppSelectionUI(){
+      el.payCards.forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-pressed','false'); });
+    }
+
+    function selectService(svcStr){
+      state.selectedSvc = svcStr;
+      const [name,price] = svcStr.split('|');
+      el.chosenSvc.textContent = name + ' • ₹' + price;
+      goTo('checkout');
+      el.mobile.focus();
+    }
+
+    // ---------- Event wiring ----------
+    el.svcBtns.forEach(btn => btn.addEventListener('click', () => selectService(btn.getAttribute('data-svc'))));
+    el.btnBackToServices.addEventListener('click', () => goTo('services'));
+    el.btnBackToCheckout.addEventListener('click', () => goTo('checkout'));
+
+    el.btnProceed.addEventListener('click', () => {
+      if(!state.selectedSvc){ alert('कृपया पहले कोई सर्विस चुनें।'); return; }
+      const mob = el.mobile.value.trim();
+      if(!/^[0-9]{10}$/.test(mob)){ alert('कृपया वैध 10 अंकों का मोबाइल नंबर डालें।'); el.mobile.focus(); return; }
+      state.buyer = { name: el.buyerName.value.trim(), mobile: mob };
+      generateAndShowQr();
+      state.selectedApp = null;
+      clearAppSelectionUI();
+      el.payNowBtn.classList.add('hidden');
+      goTo('payment');
+    });
+
+    // pay-card selection (click + keyboard)
+    el.payCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const appKey = card.getAttribute('data-app');
+        state.selectedApp = appKey;
+        clearAppSelectionUI();
+        card.classList.add('selected');
+        card.setAttribute('aria-pressed','true');
+        const svc = state.selectedSvc || '';
+        const price = (svc.split('|')[1]||'').trim();
+        const appLabel = appKey==='gpay'?'Google Pay':appKey==='phonepe'?'PhonePe':'Other UPI';
+        el.payIntro.textContent = 'Selected: ' + appLabel + (price ? ' • ₹' + price : '');
+        el.payNowBtn.classList.remove('hidden');
+        el.payNowBtn.setAttribute('aria-hidden','false');
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+
+    function intentForPackage(pkg){
+      const upi = buildUpiUri();
+      const payload = upi.replace('upi://','');
+      return 'intent://'+payload+'#Intent;scheme=upi;package='+pkg+';end';
+    }
+
+    el.payNowBtn.addEventListener('click', () => {
+      if(!state.selectedApp){ alert('कृपया पेमेंट ऐप चुनें।'); return; }
+      if(state.selectedApp === 'gpay'){
+        // try intent first, then fallback to UPI uri
+        window.location.href = intentForPackage(PKG_GPAY);
+        setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
+      } else if(state.selectedApp === 'phonepe'){
+        window.location.href = intentForPackage(PKG_PHONEPE);
+        setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
+      } else {
+        window.location.href = buildUpiUri();
+      }
+    });
+
+    // download QR (from cached dataURL if available)
+    el.btnDownloadQr.addEventListener('click', async () => {
+      if(state.lastQrDataUrl){
+        const a = document.createElement('a');
+        a.href = state.lastQrDataUrl;
+        a.download = 'securetools-upi-qr.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } else {
+        // fallback: open original img src in new tab (user can save)
+        if(el.qrimg.src) window.open(el.qrimg.src, '_blank');
+        else alert('QR अभी उपलब्ध नहीं है — कृपया पहले पेमेंट स्क्रीन पर आएँ।');
+      }
+    });
+
+    // Home / reset button
+    // (No success screen; just reset state when user returns home)
+    // For convenience, allow back-to-services from checkout or payment via header - here we wire a minimal home reset
+    document.addEventListener('keydown', (e) => {
+      // optional: escape to go home if on checkout/payment (non-intrusive)
+      if(e.key === 'Escape'){
+        state.selectedSvc = null; state.buyer = null; state.selectedApp = null; state.lastQrDataUrl = null;
+        el.mobile.value = ''; el.buyerName.value = ''; el.chosenSvc.textContent = '— service not selected —';
+        clearAppSelectionUI();
+        el.payNowBtn.classList.add('hidden');
+        el.upiText.textContent = '—';
+        goTo('services');
+      }
+    });
+
+    // set current year
+    el.year.textContent = new Date().getFullYear();
+
+    // expose decoded UPI in UI on load (obfuscated in source)
+    document.addEventListener('DOMContentLoaded', () => {
+      el.upiText.textContent = decodeUpi();
+    });
+
+    // small progressive enhancement: show Pay Now after decode if app preselected (rare)
+    // (no external dependencies)
+  </script>
+</body>
+</html>
