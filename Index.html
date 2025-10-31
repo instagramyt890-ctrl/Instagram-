@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SECURETOOLS.IO — Secure UPI Checkout (Full)</title>
+  <meta name="description" content="Secure UPI checkout — educational & professional cybersecurity services.">
+  <meta name="author" content="SECURETOOLS.IO">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <link rel="icon" href="/favicon.ico">
+  <style>
+    :root{
+      --accent-1:#ff6b6b; --accent-2:#ff914d; --muted:#9aa4b2;
+      --bg-dark-1:#071022; --bg-dark-2:#0b1220; --card:#0f1724;
+      --glass: rgba(255,255,255,0.03); --radius-lg:18px; --shadow-lg: 0 18px 50px rgba(2,6,23,0.65);
+      --body-font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --max-width:980px;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0; padding:18px; font-family:var(--body-font); color:#e6eef6;
+      background:
+        radial-gradient(800px 400px at 10% 10%, rgba(255,107,107,0.06), transparent 8%),
+        radial-gradient(600px 350px at 90% 90%, rgba(18,184,106,0.035), transparent 10%),
+        linear-gradient(135deg,var(--bg-dark-1),var(--bg-dark-2));
+      -webkit-font-smoothing:antialiased; display:flex; justify-content:center;
+    }
+    main{width:100%;max-width:var(--max-width); margin:6px auto; padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    h1{margin:0;font-size:20px;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,#fff,#cfe8ff);-webkit-background-clip:text;color:transparent}
+    .subtitle{font-size:13px;color:var(--muted)}
+    .card{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);border:1px solid rgba(255,255,255,0.03); margin-top:14px;}
+    .flex{display:flex;gap:12px} .col{display:flex;flex-direction:column;gap:10px}
+    .services ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+    .services li{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.02)}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+    .btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:800;letter-spacing:0.6px}
+    .btn:active{transform:scale(0.995)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#fff;box-shadow:0 8px 26px rgba(255,75,145,0.06)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px}
+    label{display:block;margin-top:8px;font-size:13px;color:var(--muted)}
+    input[type="tel"],input[type="text"],select{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#e6eef6;margin-top:6px;font-size:15px;}
+    .pay-grid{display:flex;gap:12px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+    .pay-card{width:120px;padding:12px;border-radius:12px;background:linear-gradient(180deg,#071d2b,#04202a);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:2px solid transparent;transition:transform .14s ease,box-shadow .14s ease}
+    .pay-card .logo{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;background:#072431}
+    .pay-card.selected{border-color:rgba(255,75,145,0.28);box-shadow:0 10px 28px rgba(0,0,0,0.6);transform:translateY(-6px)}
+    .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px;margin-top:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .qr-box{padding:12px;border-radius:12px;background:linear-gradient(180deg,#071d2b,#04202a);display:inline-block}
+    img.qr{width:260px;height:260px;border-radius:12px;display:block;box-shadow:0 10px 40px rgba(255,75,145,0.06)}
+    .muted-inline{color:var(--muted);font-size:13px}
+    .tiny{font-size:13px;color:var(--muted)}
+    .center{text-align:center}
+    footer{margin-top:40px;text-align:center;color:var(--muted);font-size:12px;line-height:1.6}
+    .timer-badge{display:inline-block;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,#ffb3a7,#ff6b6b);color:#2b0606;font-weight:700}
+    .success-badge{display:inline-block;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,#1fd67a,#12b86a);color:#042014;font-weight:700}
+    .hidden{display:none}
+    @media (max-width:520px){ .pay-card{width:92px;padding:10px} img.qr{width:200px;height:200px} .card{padding:14px} input[type="tel"],input[type="text"]{padding:10px} }
+    .focus-visible:focus{outline:3px solid rgba(255,107,107,0.18);outline-offset:3px;border-radius:8px}
+    .spacer{height:12px} .muted{color:var(--muted)} .lead{font-size:15px;color:#cfe8ff;font-weight:700} .note{font-size:13px;color:var(--muted)}
+    .legal{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
+    /* bottom fixed app bar (mobile) */
+    .appbar{position:fixed;left:12px;right:12px;bottom:14px;display:flex;justify-content:space-around;gap:8px;padding:8px;border-radius:14px;background:linear-gradient(180deg, rgba(0,0,0,0.28), rgba(255,255,255,0.02));box-shadow:0 10px 30px rgba(0,0,0,0.6);z-index:60}
+    .appbtn{flex:1;display:flex;align-items:center;gap:8px;justify-content:center;padding:10px;border-radius:10px;border:0;background:transparent;color:#fff;cursor:pointer;font-weight:700}
+    .appbtn .icon{width:28px;height:28px;border-radius:6px;background:#072431;display:flex;align-items:center;justify-content:center}
+    .amount-pill{display:inline-block;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:700}
+  </style>
+</head>
+<body>
+  <main role="main" aria-labelledby="mainTitle">
+    <header>
+      <div>
+        <h1 id="mainTitle">SECURETOOLS.IO</h1>
+        <div class="subtitle">ethical security • audit • awareness</div>
+      </div>
+      <div class="tiny">INTERNATIONAL IP</div>
+    </header>
+
+    <section class="card" aria-labelledby="checkoutHeading">
+      <h2 id="checkoutHeading" class="lead">Secure UPI Checkout</h2>
+      <p class="note">सभी सेवाएँ केवल कानूनी एवं शैक्षिक प्रयोजन के लिए। नीचे से सर्विस चुनें और UPI से तुरंत भुगतान करें।</p>
+
+      <div class="services spacer" role="region" aria-label="Available services">
+        <ul>
+          <li>
+            <div><strong>Instagram account tool</strong><div class="muted-inline">— quick review & recommendations</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag">₹499</span>
+              <button class="btn btn-primary svc-btn" data-svc="Instagram account tool|499" aria-label="Buy Instagram account tool">Buy</button>
+            </div>
+          </li>
+          <li>
+            <div><strong>Facebook account tool</strong><div class="muted-inline">— privacy & login hardening</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag">₹499</span>
+              <button class="btn btn-primary svc-btn" data-svc="Facebook account tool|499" aria-label="Buy Facebook account tool">Buy</button>
+            </div>
+          </li>
+          <li>
+            <div><strong>WhatsApp account tool</strong><div class="muted-inline">— personal & group privacy tips</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag">₹299</span>
+              <button class="btn btn-primary svc-btn" data-svc="WhatsApp account tool|299" aria-label="Buy WhatsApp account tool">Buy</button>
+            </div>
+          </li>
+          <li>
+            <div><strong>Call recording account tool</strong><div class="muted-inline">— legal & ethical guidance</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag">₹699</span>
+              <button class="btn btn-primary svc-btn" data-svc="Call recording account tool|699" aria-label="Buy Call recording account tool">Buy</button>
+            </div>
+          </li>
+          <li>
+            <div><strong>Phishing io tool</strong><div class="muted-inline">— simulated phishing & lessons</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag">₹399</span>
+              <button class="btn btn-primary svc-btn" data-svc="Phishing io tool|399" aria-label="Buy Phishing io tool">Buy</button>
+            </div>
+          </li>
+          <li>
+            <div><strong>Custom security workshop (1-hr)</strong><div class="muted-inline">— team training session</div></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="tag">₹1999</span>
+              <button class="btn btn-primary svc-btn" data-svc="Security workshop|1999" aria-label="Buy workshop">Buy</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="checkoutFlow" class="spacer" role="region" aria-label="Checkout flow">
+        <div class="card" style="margin-top:12px;">
+          <div class="col">
+            <div class="lead">Selected service</div>
+            <div id="chosenSvc" class="muted-inline">— कोई सर्विस चुनें —</div>
+
+            <label for="mobile">Mobile number (contact)</label>
+            <input type="tel" id="mobile" placeholder="91xxxxxxxxxx" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" aria-label="Enter mobile number" autocomplete="tel" required>
+
+            <label for="buyerName">Your name (optional)</label>
+            <input type="text" id="buyerName" placeholder="Name (optional)" aria-label="Enter your name" autocomplete="name">
+
+            <label for="displayAmount" class="muted-inline" style="margin-top:6px">Amount</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span id="displayAmount" class="amount-pill">—</span>
+              <button class="btn btn-ghost" id="btn-clear">Clear</button>
+              <button class="btn btn-primary" id="btn-generate">Generate QR & Proceed</button>
+            </div>
+
+            <div class="note" style="margin-top:10px">Next: Scan QR or open your UPI app using the app buttons below. Amount will be pre-filled.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="paymentArea" class="card hidden" style="margin-top:14px;" aria-live="polite">
+        <h3 class="lead">UPI Payment</h3>
+        <div id="payIntro" class="tiny">Select app or scan QR below.</div>
+
+        <div class="pay-row" style="display:flex;flex-direction:column;align-items:center">
+          <div class="pay-grid" id="payGrid" role="list">
+            <div class="pay-card" data-app="gpay" id="card-gpay" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with Google Pay">
+              <div class="logo" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#072431"/><path d="M6 7h6v2H8v8H6z" fill="#fff" opacity="0.9"/><circle cx="16" cy="13" r="3" fill="#ff6b6b"/></svg></div>
+              <div class="pay-label">Google Pay</div>
+              <div class="pay-sub">open GPay</div>
+            </div>
+
+            <div class="pay-card" data-app="phonepe" id="card-phonepe" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with PhonePe">
+              <div class="logo" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#072431"/><path d="M7 7h10v2H7z" fill="#fff" opacity="0.9"/><path d="M7 13h8v2H7z" fill="#12b86a"/></svg></div>
+              <div class="pay-label">PhonePe</div>
+              <div class="pay-sub">open PhonePe</div>
+            </div>
+
+            <div class="pay-card" data-app="upi" id="card-upi" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with any UPI app">
+              <div class="logo" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#072431"/><path d="M7 7h10v10H7z" fill="#fff" opacity="0.9"/><path d="M9 9h6v6H9z" fill="#ff914d"/></svg></div>
+              <div class="pay-label">Other UPI</div>
+              <div class="pay-sub">open any UPI app</div>
+            </div>
+          </div>
+
+          <div style="width:100%;display:flex;justify-content:center;margin-top:12px;">
+            <button id="payNowBtn" class="btn btn-primary hidden" aria-hidden="true">Pay Now</button>
+          </div>
+
+          <div class="qr-wrap" aria-live="polite" style="width:100%;max-width:420px">
+            <div class="qr-box glow" id="qrBox" role="img" aria-label="QR code for UPI pay">
+              <img id="qrimg" class="qr" src="" alt="QR code for secure UPI payment" loading="lazy">
+            </div>
+
+            <div id="payLine" class="small-note">Please scan the QR or use Pay Now.</div>
+            <div class="small-note">UPI ID: <strong id="upiText" class="muted-inline">—</strong> • Payee: <strong>SECURETOOLS.IO</strong></div>
+
+            <div style="display:flex;gap:8px;margin-top:8px;justify-content:center;flex-wrap:wrap">
+              <button id="btn-download-qr" class="btn btn-ghost" title="Download QR image">Download QR</button>
+              <button id="btn-copy-upi" class="btn btn-ghost" title="Copy UPI ID">Copy UPI ID</button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap">
+            <div id="timerBadge" class="timer-badge hidden" aria-hidden="true">⏱ 10:00</div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-ghost" id="btn-back-to-checkout">Back</button>
+            <button class="btn btn-ghost" id="btn-simulate-success" title="(demo) mark paid">Simulate Paid</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-success" class="card hidden center" role="region" aria-label="Payment success">
+        <h2>Payment Received ✅</h2>
+        <p id="successText">धन्यवाद! आपकी सेवा सक्रिय कर दी गई है — हमारी टीम आपसे संपर्क करेगी।</p>
+        <div style="margin-top:12px">
+          <button class="btn btn-primary" id="btn-go-home">Go to Home</button>
+        </div>
+      </div>
+
+      <div class="legal">
+        <div>Payments processed securely via UPI. कृपया भुगतान के बाद support@securetools.io पर ट्रांज़ैक्शन आईडी भेजें।</div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> SECURETOOLS.IO — educational & professional cybersecurity services.
+    </footer>
+  </main>
+
+  <!-- bottom app bar for mobile (always present but functional only after QR generation) -->
+  <div class="appbar" id="appbar" aria-hidden="true" style="display:none">
+    <button class="appbtn" id="app-gpay"><span class="icon">G</span> Google Pay</button>
+    <button class="appbtn" id="app-phonepe"><span class="icon">P</span> PhonePe</button>
+    <button class="appbtn" id="app-upi"><span class="icon">U</span> Other UPI</button>
+  </div>
+
+  <script>
+    /********************************************************
+     * Updated checkout script with small UX changes:
+     * - amount display
+     * - bottom appbar
+     * - hide raw UPI when opening native intent
+     ********************************************************/
+
+    const ENC_UPI = 'ODk1NTMzNzQxMEB5Ymw='; // base64 '8955337410@ybl'
+    const PAYEE_NAME = 'SECURETOOLS.IO';
+    const SESSION_SECONDS = 10 * 60;
+    const DEFAULT_AMOUNT = 499;
+    const PKG_GPAY = 'com.google.android.apps.nbu.paisa.user';
+    const PKG_PHONEPE = 'com.phonepe.app';
+
+    const state = {
+      selectedSvc: null, buyer: null, selectedApp: null, lastQrDataUrl: null,
+      sessionRemaining: 0, sessionTimerId: null, page: 'services'
+    };
+
+    const el = {
+      svcBtns: Array.from(document.querySelectorAll('.svc-btn')),
+      chosenSvc: document.getElementById('chosenSvc'),
+      mobile: document.getElementById('mobile'),
+      buyerName: document.getElementById('buyerName'),
+      btnClear: document.getElementById('btn-clear'),
+      btnGenerate: document.getElementById('btn-generate'),
+      paymentArea: document.getElementById('paymentArea'),
+      payGrid: document.getElementById('payGrid'),
+      payCards: Array.from(document.querySelectorAll('.pay-card')),
+      payNowBtn: document.getElementById('payNowBtn'),
+      qrimg: document.getElementById('qrimg'),
+      upiText: document.getElementById('upiText'),
+      payLine: document.getElementById('payLine'),
+      btnBackToCheckout: document.getElementById('btn-back-to-checkout'),
+      btnDownloadQr: document.getElementById('btn-download-qr'),
+      btnCopyUpi: document.getElementById('btn-copy-upi'),
+      timerBadge: document.getElementById('timerBadge'),
+      btnSimulate: document.getElementById('btn-simulate-success'),
+      pageSuccess: document.getElementById('page-success'),
+      successText: document.getElementById('successText'),
+      btnGoHome: document.getElementById('btn-go-home'),
+      year: document.getElementById('year'),
+      payIntro: document.getElementById('payIntro'),
+      displayAmount: document.getElementById('displayAmount'),
+      appbar: document.getElementById('appbar'),
+      appGpay: document.getElementById('app-gpay'),
+      appPhonepe: document.getElementById('app-phonepe'),
+      appUpi: document.getElementById('app-upi')
+    };
+
+    function decodeUpi(){ try{ return atob(ENC_UPI); } catch(e){ return '8955337410@ybl'; } }
+    function sanitizePrice(price){ const n = parseFloat(price); return isNaN(n) ? DEFAULT_AMOUNT.toString() : Math.round(n).toString(); }
+
+    function buildUpiUri(){
+      const svc = state.selectedSvc || '';
+      const price = sanitizePrice((svc.split('|')[1]||'').trim());
+      let uri = 'upi://pay?pa='+encodeURIComponent(decodeUpi())+'&pn='+encodeURIComponent(PAYEE_NAME)+'&cu=INR';
+      if(price) uri += '&am='+encodeURIComponent(price);
+      if(state.buyer && state.buyer.mobile) uri += '&tn='+encodeURIComponent('Order from '+state.buyer.mobile);
+      return uri;
+    }
+
+    function qrImageUrl(uri, size=520){ return 'https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(uri); }
+    function showElement(node){ node.classList.remove('hidden'); node.style.display = ''; }
+    function hideElement(node){ node.classList.add('hidden'); node.style.display = 'none'; }
+    function updateChosenUI(){
+      if(state.selectedSvc){
+        const [name,price] = state.selectedSvc.split('|');
+        el.chosenSvc.textContent = name + ' • ₹' + price;
+        el.displayAmount.textContent = '₹' + price;
+      } else {
+        el.chosenSvc.textContent = '— कोई सर्विस चुनें —';
+        el.displayAmount.textContent = '—';
+      }
+    }
+    function clearAppSelectionUI(){ el.payCards.forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-pressed','false'); }); }
+
+    el.svcBtns.forEach(btn => btn.addEventListener('click', () => {
+      const svc = btn.getAttribute('data-svc');
+      state.selectedSvc = svc;
+      updateChosenUI();
+      document.getElementById('mobile').focus();
+      btn.animate([{transform:'scale(0.98)'},{transform:'scale(1)'}],{duration:150});
+      // analytics stub
+      console.debug('select_service', svc);
+    }));
+
+    el.btnGenerate.addEventListener('click', () => {
+      if(!state.selectedSvc){ alert('कृपया पहले कोई सर्विस चुनें।'); return; }
+      const mob = el.mobile.value.trim();
+      if(!/^[0-9]{10}$/.test(mob)){ alert('कृपया वैध 10 अंकों का मोबाइल नंबर डालें।'); el.mobile.focus(); return; }
+      state.buyer = { name: el.buyerName.value.trim(), mobile: mob };
+      localStorage.setItem('st_buyer', JSON.stringify(state.buyer));
+      generateAndShowQr();
+      showElement(el.paymentArea);
+      state.selectedApp = null; clearAppSelectionUI();
+      el.payNowBtn.classList.add('hidden'); el.timerBadge.classList.remove('hidden');
+      el.payIntro.textContent = 'Payment QR generated. Choose an app or scan the QR.';
+      // show mobile appbar
+      el.appbar.style.display = 'flex'; el.appbar.setAttribute('aria-hidden','false');
+      window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+      console.debug('generate_qr', state.selectedSvc, state.buyer);
+    });
+
+    async function generateAndShowQr(){
+      const uri = buildUpiUri();
+      const imgsrc = qrImageUrl(uri,520)+'&t='+Date.now();
+      el.qrimg.src = imgsrc;
+      const [name,price] = (state.selectedSvc||'').split('|');
+      el.payLine.textContent = (name ? name+' — ₹'+price : 'Please scan the QR or use Pay Now.');
+      el.upiText.textContent = decodeUpi();
+      startSessionTimer();
+      // cache data url for download when possible
+      try{
+        const resp = await fetch(imgsrc);
+        const blob = await resp.blob();
+        const reader = new FileReader();
+        reader.onload = () => { state.lastQrDataUrl = reader.result; };
+        reader.readAsDataURL(blob);
+      }catch(err){
+        state.lastQrDataUrl = null;
+      }
+    }
+
+    el.payCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const appKey = card.getAttribute('data-app');
+        state.selectedApp = appKey;
+        clearAppSelectionUI();
+        card.classList.add('selected'); card.setAttribute('aria-pressed','true');
+        const svc = state.selectedSvc || ''; const price = (svc.split('|')[1]||'').trim();
+        const appLabel = appKey==='gpay'?'Google Pay':appKey==='phonepe'?'PhonePe':'Other UPI';
+        el.payIntro.textContent = 'Selected: ' + appLabel + (price ? ' • ₹' + price : '');
+        el.payNowBtn.classList.remove('hidden'); el.payNowBtn.setAttribute('aria-hidden','false');
+        console.debug('pay_select', appKey);
+      });
+      card.addEventListener('keydown', (e) => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); card.click(); } });
+    });
+
+    function intentForPackage(pkg){
+      const upi = buildUpiUri();
+      const payload = upi.replace('upi://','');
+      return 'intent://'+payload+'#Intent;scheme=upi;package='+pkg+';end';
+    }
+
+    el.payNowBtn.addEventListener('click', () => {
+      if(!state.selectedApp){ alert('कृपया पेमेंट ऐप चुनें।'); return; }
+      // hide raw UPI ID when launching native intent (per request: don't expose on app launch)
+      if(state.selectedApp === 'gpay'){
+        el.upiText.style.visibility = 'hidden';
+        window.location.href = intentForPackage(PKG_GPAY);
+        setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
+      } else if(state.selectedApp === 'phonepe'){
+        el.upiText.style.visibility = 'hidden';
+        window.location.href = intentForPackage(PKG_PHONEPE);
+        setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
+      } else {
+        // other UPI: show plain UPI so user can manually paste if needed
+        el.upiText.style.visibility = 'visible';
+        window.location.href = buildUpiUri();
+      }
+      setTimeout(()=>{ alert('कृपया अपना UPI ऐप खोलें और भुगतान पूरा करें। भुगतान पूरा होने पर यहाँ वापस आएँ।'); }, 500);
+      console.debug('pay_intent', state.selectedApp);
+    });
+
+    el.btnDownloadQr.addEventListener('click', async () => {
+      if(state.lastQrDataUrl){
+        const a = document.createElement('a'); a.href = state.lastQrDataUrl; a.download = 'securetools-upi-qr.png';
+        document.body.appendChild(a); a.click(); a.remove();
+      } else {
+        if(el.qrimg.src) window.open(el.qrimg.src, '_blank');
+        else alert('QR अभी उपलब्ध नहीं है — कृपया पहले पेमेंट स्क्रीन पर आएँ।');
+      }
+    });
+
+    el.btnCopyUpi.addEventListener('click', async () => {
+      try{ await navigator.clipboard.writeText(decodeUpi()); alert('UPI ID कॉपी हो गया: ' + decodeUpi()); }
+      catch(e){ alert('कॉपी असफल — कृपया मैन्युअली कॉपी करें: ' + decodeUpi()); }
+    });
+
+    el.btnSimulate.addEventListener('click', () => { stopSessionTimer(); showSuccess('Demo: भुगतान सफल दिखाया गया।'); });
+
+    el.btnBackToCheckout.addEventListener('click', () => {
+      hideElement(el.paymentArea);
+      el.appbar.style.display = 'none'; el.appbar.setAttribute('aria-hidden','true');
+      el.upiText.style.visibility = 'visible';
+    });
+
+    el.btnClear.addEventListener('click', () => { resetAll(); });
+
+    el.btnGoHome.addEventListener('click', () => { resetAll(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+    function showSuccess(msg){
+      hideElement(el.paymentArea);
+      showElement(document.getElementById('page-success'));
+      el.successText.textContent = msg || 'Thank you — payment received.';
+      localStorage.setItem('lastPayment', JSON.stringify({svc: state.selectedSvc, buyer: state.buyer, ts: Date.now()}));
+    }
+
+    function startSessionTimer(){
+      stopSessionTimer();
+      state.sessionRemaining = SESSION_SECONDS;
+      el.timerBadge.textContent = '⏱ ' + formatTime(state.sessionRemaining);
+      el.timerBadge.classList.remove('hidden');
+      sessionStorage.setItem('st_ts', Date.now());
+      sessionStorage.setItem('st_remaining', state.sessionRemaining);
+      state.sessionTimerId = setInterval(()=> {
+        state.sessionRemaining--;
+        if(state.sessionRemaining <= 0){
+          stopSessionTimer();
+          alert('⏳ आपका भुगतान सत्र समाप्त हो गया है। कृपया दोबारा प्रयास करें।');
+          resetAll(); return;
+        }
+        el.timerBadge.textContent = '⏱ ' + formatTime(state.sessionRemaining);
+        sessionStorage.setItem('st_remaining', state.sessionRemaining);
+      }, 1000);
+    }
+
+    function stopSessionTimer(){ if(state.sessionTimerId) { clearInterval(state.sessionTimerId); state.sessionTimerId = null; } el.timerBadge.classList.add('hidden'); sessionStorage.removeItem('st_ts'); sessionStorage.removeItem('st_remaining'); }
+    function formatTime(seconds){ const m = Math.floor(seconds/60).toString().padStart(2,'0'); const s = (seconds%60).toString().padStart(2,'0'); return `${m}:${s}`; }
+
+    (function restoreSession(){
+      try{
+        const saved = parseInt(sessionStorage.getItem('st_remaining') || '0', 10);
+        const savedTs = parseInt(sessionStorage.getItem('st_ts') || '0', 10);
+        if(saved && savedTs){
+          const elapsed = Math.floor((Date.now() - savedTs)/1000);
+          const remaining = saved - elapsed;
+          if(remaining > 0){
+            state.sessionRemaining = remaining;
+            el.timerBadge.textContent = '⏱ ' + formatTime(state.sessionRemaining);
+            el.timerBadge.classList.remove('hidden');
+            state.sessionTimerId = setInterval(()=> {
+              state.sessionRemaining--;
+              if(state.sessionRemaining <= 0){
+                clearInterval(state.sessionTimerId);
+                alert('⏳ आपका भुगतान सत्र समाप्त हो गया है। कृपया दोबारा प्रयास करें।');
+                resetAll(); return;
+              }
+              el.timerBadge.textContent = '⏱ ' + formatTime(state.sessionRemaining);
+            },1000);
+            const savedBuyer = JSON.parse(localStorage.getItem('st_buyer') || '{}');
+            if(savedBuyer && savedBuyer.mobile){
+              state.buyer = savedBuyer;
+              document.getElementById('mobile').value = savedBuyer.mobile;
+              document.getElementById('buyerName').value = savedBuyer.name || '';
+              showElement(el.paymentArea);
+              el.appbar.style.display = 'flex';
+            }
+          } else { sessionStorage.removeItem('st_ts'); sessionStorage.removeItem('st_remaining'); }
+        } else {
+          const saved = JSON.parse(localStorage.getItem('st_buyer') || '{}');
+          if(saved && saved.mobile){ document.getElementById('mobile').value = saved.mobile; document.getElementById('buyerName').value = saved.name || ''; }
+        }
+      }catch(e){}
+    })();
+
+    function resetAll(){
+      state.selectedSvc = null; state.buyer = null; state.selectedApp = null; state.lastQrDataUrl = null;
+      document.getElementById('mobile').value = ''; document.getElementById('buyerName').value = ''; el.chosenSvc.textContent = '— कोई सर्विस चुनें —';
+      el.displayAmount.textContent = '—';
+      clearAppSelectionUI();
+      el.payNowBtn.classList.add('hidden');
+      el.upiText.textContent = '—';
+      el.upiText.style.visibility = 'visible';
+      stopSessionTimer();
+      hideElement(el.paymentArea);
+      hideElement(document.getElementById('page-success'));
+      localStorage.removeItem('st_buyer');
+      el.appbar.style.display = 'none'; el.appbar.setAttribute('aria-hidden','true');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'p' || e.key === 'P'){
+        if(!document.getElementById('paymentArea').classList.contains('hidden')) return;
+        if(state.selectedSvc && state.buyer){ generateAndShowQr(); showElement(el.paymentArea); el.appbar.style.display='flex'; }
+      }
+      if(e.key === 'c' || e.key === 'C'){ el.btnCopyUpi.click(); }
+    });
+
+    // bottom appbar handlers (convenience)
+    el.appGpay.addEventListener('click', ()=> {
+      // copy selection to state and trigger native intent
+      state.selectedApp = 'gpay'; el.upiText.style.visibility = 'hidden';
+      window.location.href = intentForPackage(PKG_GPAY);
+      setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
+    });
+    el.appPhonepe.addEventListener('click', ()=> {
+      state.selectedApp = 'phonepe'; el.upiText.style.visibility = 'hidden';
+      window.location.href = intentForPackage(PKG_PHONEPE);
+      setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
+    });
+    el.appUpi.addEventListener('click', ()=> {
+      state.selectedApp = 'upi'; el.upiText.style.visibility = 'visible';
+      window.location.href = buildUpiUri();
+    });
+
+    // small analytics stub
+    const analytics = { events: [], send: function(name,data){ this.events.push({name,data,t:new Date().toISOString()}); console.debug('ANALYTICS:',name,data); } };
+    el.svcBtns.forEach(b => b.addEventListener('click', () => analytics.send('select_service', {svc:b.getAttribute('data-svc')})));
+    el.btnGenerate.addEventListener('click', () => analytics.send('generate_qr', {svc: state.selectedSvc, buyer: state.buyer}));
+    el.payNowBtn.addEventListener('click', () => analytics.send('pay_intent', {app: state.selectedApp}));
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.addEventListener('DOMContentLoaded', () => { el.upiText.textContent = decodeUpi(); });
+
+  </script>
+</body>
+</html>
