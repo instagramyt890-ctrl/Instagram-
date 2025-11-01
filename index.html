@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Clone</title>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Reset & base styles */
+    * {margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif;}
+    body {background: #fafafa; color: #262626;}
+    a {text-decoration: none; color: inherit;}
+
+    /* Container */
+    .container {display: flex; flex-wrap: wrap; max-width: 1200px; margin: auto; padding: 20px; gap: 20px;}
+    .col-9 {flex: 0 0 65%;}
+    .col-3 {flex: 0 0 30%;}
+
+    /* Header / Navbar */
+    header {background: #fff; border-bottom: 1px solid #dbdbdb; position: sticky; top: 0; z-index: 1000;}
+    .navbar {display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;}
+    .logo img {height: 30px;}
+    .searchbar {display: flex; align-items: center; background: #efefef; padding: 5px 10px; border-radius: 5px;}
+    .searchbar input {border: none; background: transparent; outline: none; padding: 5px;}
+    .searchbar img {margin-left: 5px;}
+    .nav-links ul {display: flex; list-style: none; gap: 20px; align-items: center;}
+    .nav-links li img, .nav-links li i {cursor: pointer; font-size: 20px;}
+
+    /* Stories */
+    .statuses {display: flex; overflow-x: auto; gap: 15px; margin: 20px 0; padding-bottom: 10px;}
+    .status img {border-radius: 50%; border: 2px solid #ff8501; width: 60px; height: 60px; cursor: pointer;}
+    .status img:hover {transform: scale(1.1); transition: 0.3s;}
+
+    /* Card / Post */
+    .card {background: #fff; border: 1px solid #dbdbdb; border-radius: 5px; margin-bottom: 20px;}
+    .top {display: flex; justify-content: space-between; padding: 10px;}
+    .userDetails {display: flex; align-items: center; gap: 10px;}
+    .userDetails img {border-radius: 50%; width: 40px; height: 40px;}
+    .userDetails h3 {font-size: 14px;}
+    .userDetails span {font-weight: 400; color: #8e8e8e; font-size: 12px;}
+    .imgBx img {width: 100%; max-height: 500px; object-fit: cover;}
+    .bottom {padding: 10px;}
+    .actionBtns {display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+    .actionBtns .left span, .actionBtns .left svg {margin-right: 10px; cursor: pointer;}
+    .likes {font-weight: bold; font-size: 14px; margin-bottom: 5px;}
+    .message {font-size: 14px; margin-bottom: 5px;}
+    .message b {margin-right: 5px;}
+    .comments, .postTime {color: #8e8e8e; font-size: 12px; margin-bottom: 5px;}
+    .addComments {display: flex; align-items: center; gap: 10px; border-top: 1px solid #efefef; padding-top: 5px;}
+    .addComments input {border: none; flex: 1; padding: 5px; outline: none;}
+    .addComments a {color: #0095f6; font-weight: bold; cursor: pointer;}
+
+    /* Sidebar Suggestions */
+    .col-3 .card {padding: 10px;}
+    .col-3 .top {display: flex; justify-content: space-between; margin-bottom: 10px;}
+    .col-3 .top h3 {font-size: 14px;}
+    .col-3 .top span {color: #8e8e8e; font-size: 12px;}
+    .follow {color: #0095f6; font-weight: bold; font-size: 12px;}
+
+    /* Footer */
+    .footer {font-size: 11px; color: #8e8e8e; margin-top: 20px;}
+    .footer a {margin-right: 10px;}
+    .footer span {display: block; margin-top: 10px;}
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .container {flex-direction: column;}
+      .col-9, .col-3 {flex: 1;}
+      .statuses img {width: 50px; height: 50px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609090809/download-200x200.png" alt="logo">
+    </div>
+    <div class="searchbar">
+      <input type="text" placeholder="Search">
+      <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093658/search-200x200.png" alt="search">
+    </div>
+    <div class="nav-links">
+      <ul>
+        <li><i class="fas fa-home"></i></li>
+        <li><i class="fab fa-facebook-messenger"></i></li>
+        <li><i class="far fa-compass"></i></li>
+        <li><i class="far fa-heart"></i></li>
+        <li><img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093221/g2-200x200.jpg" alt="user" style="border-radius:50%; width:30px; cursor:pointer;"></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- Main -->
+<main class="container">
+  <!-- Left Column (Posts) -->
+  <div class="col-9">
+    <!-- Stories -->
+    <div class="statuses">
+      <div class="status"><img src="https://media.geeksforgeeks.org/wp-content/uploads/20220604085434/GeeksForGeeks-300x243.png" alt="story1"></div>
+      <div class="status"><img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093221/g2-200x200.jpg" alt="story2"></div>
+      <div class="status"><img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093241/g3-200x200.png" alt="story3"></div>
+      <div class="status"><img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093229/g-200x200.png" alt="story4"></div>
+    </div>
+
+    <!-- Posts -->
+    <div class="card">
+      <div class="top">
+        <div class="userDetails">
+          <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093229/g-200x200.png" alt="profile">
+          <h3>Ayush Agarwal <br><span>Mumbai, India</span></h3>
+        </div>
+        <i class="fas fa-ellipsis-h"></i>
+      </div>
+      <div class="imgBx">
+        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609090112/gfg1-298x300.jpeg" alt="post1">
+      </div>
+      <div class="bottom">
+        <div class="actionBtns">
+          <div class="left">
+            <i class="far fa-heart" onclick="likePost(this)"></i>
+            <i class="far fa-comment"></i>
+            <i class="far fa-paper-plane"></i>
+          </div>
+          <div class="right"><i class="far fa-bookmark"></i></div>
+        </div>
+        <p class="likes">203 likes</p>
+        <p class="message"><b>Raju Modi</b> Awesome!</p>
+        <h4 class="comments">View all 32 comments</h4>
+        <h5 class="postTime">2 hours ago</h5>
+        <div class="addComments">
+          <input type="text" placeholder="Add a comment...">
+          <a href="#">Post</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add more posts similarly -->
+  </div>
+
+  <!-- Right Column (Sidebar) -->
+  <div class="col-3">
+    <div class="card">
+      <h4>Suggestions For You</h4>
+      <div class="top">
+        <div class="userDetails">
+          <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093221/g2-200x200.jpg" alt="suggest1">
+          <h3>Aditya Verma<br><span>Follows You</span></h3>
+        </div>
+        <a href="#" class="follow">Follow</a>
+      </div>
+      <div class="top">
+        <div class="userDetails">
+          <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220609093229/g-200x200.png" alt="suggest2">
+          <h3>Amit Singh<br><span>Follows You</span></h3>
+        </div>
+        <a href="#" class="follow">Follow</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <a href="#">About</a>
+      <a href="#">Help</a>
+      <a href="#">API</a>
+      <a href="#">Jobs</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <br>
+      <span>&copy; 2023 INSTAGRAM FROM FACEBOOK</span>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Like functionality
+  function likePost(el) {
+    if(el.classList.contains('fas')) {
+      el.classList.remove('fas');
+      el.classList.add('far');
+    } else {
+      el.classList.remove('far');
+      el.classList.add('fas');
+    }
+  }
+</script>
+
+</body>
+</html>
