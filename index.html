@@ -91,8 +91,61 @@
     <section id="page-services" class="card services fade-in" role="region" aria-label="Service selection">
       <h2>Services</h2>
       <p class="tiny">All services are legal, ethical and for awareness / professional security.</p>
-      <ul id="svcList">
-        <!-- JS inject -->
+      <ul>
+        <li>
+          <div>
+            <strong>Instagram account security audit</strong>
+            <div class="muted-inline">— quick review & recommendations</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹249</span>
+            <button class="btn btn-primary" data-svc="Instagram account security audit|249" aria-label="Buy Instagram audit">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Facebook account tool hardening</strong>
+            <div class="muted-inline">— privacy & login hardening</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹249</span>
+            <button class="btn btn-primary" data-svc="Facebook account tool hardening|249" aria-label="Buy Facebook audit">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>WhatsApp account tool</strong>
+            <div class="muted-inline">— personal & group privacy tips</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹249</span>
+            <button class="btn btn-primary" data-svc="WhatsApp account tool|249" aria-label="Buy WhatsApp workshop">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Call recording account tool</strong>
+            <div class="muted-inline">— legal & ethical guidance</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹249</span>
+            <button class="btn btn-primary" data-svc="Call recording account tool|249" aria-label="Buy call review">Buy</button>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <strong>Phishing io tool</strong>
+            <div class="muted-inline">— simulated phishing & lessons</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹249</span>
+            <button class="btn btn-primary" data-svc="Phishing io tool|249" aria-label="Buy phishing training">Buy</button>
+          </div>
+        </li>
       </ul>
     </section>
 
@@ -202,7 +255,7 @@
      ****************************************************/
 
     // ---------- Config ----------
-    const ENC_UPI = 'a2FsaWx1bml4LmlvQGppbw=='; // base64('8955337410@ybl')
+    const ENC_UPI = 'ODk1NTMzNzQxMEB5Ymw='; // base64('8955337410@ybl')
     const PAYEE_NAME = 'SECURETOOLS.IO';
     const PKG_GPAY = 'com.google.android.apps.nbu.paisa.user';
     const PKG_PHONEPE = 'com.phonepe.app';
@@ -214,7 +267,7 @@
     const pages = ['services','checkout','payment'];
     const el = {
       pages: pages.reduce((acc,k)=>{ acc[k]=document.getElementById('page-'+k); return acc; }, {}),
-      svcList: document.getElementById('svcList'),
+      svcBtns: Array.from(document.querySelectorAll('[data-svc]')),
       chosenSvc: document.getElementById('chosenSvc'),
       mobile: document.getElementById('mobile'),
       buyerName: document.getElementById('buyerName'),
@@ -229,33 +282,8 @@
       payLine: document.getElementById('payLine'),
       btnBackToCheckout: document.getElementById('btn-back-to-checkout'),
       btnDownloadQr: document.getElementById('btn-download-qr'),
-      year: document.getElementById('year'),
+      year: document.getElementById('year')
     };
-
-    // ---------- Services list ----------
-    const services = [
-      ['Instagram account security audit','249'],
-      ['Facebook account tool hardening','249'],
-      ['WhatsApp account tool','249'],
-      ['Call recording account tool','249'],
-      ['Phishing io tool','249']
-    ];
-
-    function renderServices(){
-      el.svcList.innerHTML = '';
-      services.forEach(s => {
-        const li = document.createElement('li');
-        li.innerHTML = `<div>
-            <strong>${s[0]}</strong>
-            <div class="muted-inline">— quick review & recommendations</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">₹${s[1]}</span>
-            <button class="btn btn-primary" data-svc="${s[0]}|${s[1]}" aria-label="Buy ${s[0]}">Buy</button>
-          </div>`;
-        el.svcList.appendChild(li);
-      });
-    }
 
     // ---------- Helpers ----------
     function goTo(page){
@@ -290,12 +318,13 @@
     }
 
     function qrImageUrl(uri, size=440){
+      // qrserver allows size and data; add timestamp to prevent caching during testing
       return 'https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(uri);
     }
 
     function generateAndShowQr(){
       const uri = buildUpiUri();
-      const imgsrc = qrImageUrl(uri,520)+'&t='+Date.now();
+      const imgsrc = qrImageUrl(uri,440)+'&t='+Date.now();
       el.qrimg.src = imgsrc;
       const [name,price] = (state.selectedSvc||'').split('|');
       el.payLine.textContent = (name ? name+' — ₹'+price : 'Please scan the QR or use Pay Now.');
@@ -327,24 +356,9 @@
     }
 
     // ---------- Event wiring ----------
-    renderServices();
-    el.svcList.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-svc]');
-      if(btn) selectService(btn.getAttribute('data-svc'));
-    });
-
-    el.btnBackToServices.addEventListener('click', () => {
-      state.selectedSvc = null;
-      el.mobile.value = ''; el.buyerName.value = ''; el.chosenSvc.textContent = '— service not selected —';
-      clearAppSelectionUI();
-      el.payNowBtn.classList.add('hidden');
-      el.upiText.textContent = decodeUpi();
-      goTo('services');
-    });
-
-    el.btnBackToCheckout.addEventListener('click', () => {
-      goTo('checkout');
-    });
+    el.svcBtns.forEach(btn => btn.addEventListener('click', () => selectService(btn.getAttribute('data-svc'))));
+    el.btnBackToServices.addEventListener('click', () => goTo('services'));
+    el.btnBackToCheckout.addEventListener('click', () => goTo('checkout');
 
     el.btnProceed.addEventListener('click', () => {
       if(!state.selectedSvc){ alert('कृपया पहले कोई सर्विस चुनें।'); return; }
@@ -437,11 +451,20 @@
       el.upiText.textContent = decodeUpi();
     });
 
-    // helper: runtime set plain upi for local dev
+    // small progressive enhancement: show Pay Now after decode if app preselected (rare)
+    // (no external dependencies)
+
+    // Extra: helper function to set ENC_UPI at runtime from plain-text for local/private usage
+    // Usage (developer console, local only):
+    //   setPlainUpi('kalilunix.io@jio');
     function setPlainUpi(plainUpi){
       try{
         const encoded = btoa(plainUpi);
+        // NOTE: this only updates runtime local variable; it won't persist in file.
+        // Use it for quick local testing.
         window.ENC_UPI_RUNTIME = encoded;
+        // override decodeUpi to prefer the runtime value
+        const originalDecode = decodeUpi;
         window.decodeUpi = function(){
           try{
             return atob(window.ENC_UPI_RUNTIME || ENC_UPI);
@@ -449,18 +472,14 @@
             return '— invalid-upi-encoding —';
           }
         };
+        // update UI immediately
         el.upiText.textContent = window.decodeUpi();
         return true;
       }catch(e){
         return false;
       }
     }
-    // expose to console for quick dev/testing
-    window.setPlainUpi = setPlainUpi;
 
-    // start on services
-    goTo('services');
   </script>
 </body>
-  </html>                            
-
+</html>
