@@ -7,14 +7,6 @@
   <meta name="description" content="Pay securely for verified cybersecurity & awareness services via UPI — official SECURETOOLS.IO checkout.">
   <meta name="author" content="SECURETOOLS.IO">
   <meta name="theme-color" content="#071022">
-  <meta property="og:title" content="Secure UPI Payment — SECURETOOLS.IO">
-  <meta property="og:description" content="Pay safely for cybersecurity & awareness services via UPI.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://securetools.io/assets/banner.png">
-  <meta property="og:url" content="https://securetools.io/checkout">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="/favicon.ico">
-
   <style>
     :root{
       --accent:#ff6b6b;
@@ -80,6 +72,8 @@
       .row{flex-direction:column}
       main{padding:12px}
     }
+    .spacer{height:6px}
+    .spacer-lg{height:18px}
   </style>
 </head>
 
@@ -97,58 +91,12 @@
     <section id="page-services" class="card services fade-in" role="region" aria-label="Service selection">
       <h2>Services</h2>
       <p class="tiny">All services are legal, ethical and for awareness / professional security.</p>
-      <ul>
-        <li>
-          <div>
-            <strong>Instagram account security audit</strong><div class="muted-inline">— quick review & recommendations</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">₹499</span>
-            <button class="btn btn-primary" data-svc="Instagram account security audit|499" aria-label="Buy Instagram audit">Buy</button>
-          </div>
-        </li>
-
-        <li>
-          <div>
-            <strong>Facebook account tool hardening</strong><div class="muted-inline">— privacy & login hardening</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">₹499</span>
-            <button class="btn btn-primary" data-svc="Facebook account tool hardening|499" aria-label="Buy Facebook audit">Buy</button>
-          </div>
-        </li>
-
-        <li>
-          <div>
-            <strong>WhatsApp account tool</strong><div class="muted-inline">— personal & group privacy tips</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">₹299</span>
-            <button class="btn btn-primary" data-svc="WhatsApp account tool|299" aria-label="Buy WhatsApp workshop">Buy</button>
-          </div>
-        </li>
-
-        <li>
-          <div>
-            <strong>Call recording account tool</strong><div class="muted-inline">— legal & ethical guidance</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">₹699</span>
-            <button class="btn btn-primary" data-svc="Call recording account tool|699" aria-label="Buy call review">Buy</button>
-          </div>
-        </li>
-
-        <li>
-          <div>
-            <strong>Phishing io tool</strong><div class="muted-inline">— simulated phishing & lessons</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="tag">₹399</span>
-            <button class="btn btn-primary" data-svc="Phishing io tool|399" aria-label="Buy phishing training">Buy</button>
-          </div>
-        </li>
+      <ul id="svcList">
+        <!-- JS inject -->
       </ul>
     </section>
+
+    <div class="spacer-lg"></div>
 
     <!-- PAGE: Checkout -->
     <section id="page-checkout" class="card hidden" role="region" aria-label="Checkout details">
@@ -169,6 +117,8 @@
       <div class="small-note">Next: Choose UPI app or scan QR on the following screen. Amount will be pre-filled in UPI app.</div>
     </section>
 
+    <div class="spacer"></div>
+
     <!-- PAGE: Payment -->
     <section id="page-payment" class="card hidden" role="region" aria-label="UPI payment">
       <h2>UPI Payment</h2>
@@ -179,7 +129,6 @@
           <!-- Google Pay -->
           <div class="pay-card" data-app="gpay" id="card-gpay" role="button" tabindex="0" aria-pressed="false" aria-label="Pay with Google Pay">
             <div class="logo" aria-hidden="true">
-              <!-- GPay-like stylized G (custom minimal) -->
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <rect width="24" height="24" rx="5" fill="#072431"/>
                 <path d="M6 7h6v2H8v8H6z" fill="#fff" opacity="0.9"/>
@@ -238,6 +187,8 @@
       </div>
     </section>
 
+    <div class="spacer-lg"></div>
+
     <footer>
       © <span id="year"></span> SECURETOOLS.IO — educational & professional cybersecurity services.<br>
       Payments are processed securely via UPI. For support: <a href="mailto:support@securetools.io">support@securetools.io</a>
@@ -246,15 +197,12 @@
 
   <script>
     /****************************************************
-     * Production-ready checkout script (updated)
-     * - Removed success page and "I paid" flow entirely
-     * - Updated service names
-     * - UPI ID obfuscated with Base64; new ID: 7872873837@ybl
-     * - QR generation with prefilled amount
+     * Single-file checkout (Services → Checkout → Payment)
+     * ENC_UPI set to base64 of kalilunix.io@jio
      ****************************************************/
 
     // ---------- Config ----------
-    const ENC_UPI = 'Nzg3Mjg3MzgzN0B5Ymw='; // base64 of '7872873837@ybl'
+    const ENC_UPI = 'a2FsaWx1bml4LmlvQGppbw=='; // base64('kalilunix.io@jio')
     const PAYEE_NAME = 'SECURETOOLS.IO';
     const PKG_GPAY = 'com.google.android.apps.nbu.paisa.user';
     const PKG_PHONEPE = 'com.phonepe.app';
@@ -266,7 +214,7 @@
     const pages = ['services','checkout','payment'];
     const el = {
       pages: pages.reduce((acc,k)=>{ acc[k]=document.getElementById('page-'+k); return acc; }, {}),
-      svcBtns: Array.from(document.querySelectorAll('[data-svc]')),
+      svcList: document.getElementById('svcList'),
       chosenSvc: document.getElementById('chosenSvc'),
       mobile: document.getElementById('mobile'),
       buyerName: document.getElementById('buyerName'),
@@ -281,8 +229,33 @@
       payLine: document.getElementById('payLine'),
       btnBackToCheckout: document.getElementById('btn-back-to-checkout'),
       btnDownloadQr: document.getElementById('btn-download-qr'),
-      year: document.getElementById('year')
+      year: document.getElementById('year'),
     };
+
+    // ---------- Services list ----------
+    const services = [
+      ['Instagram account security audit','249'],
+      ['Facebook account tool hardening','249'],
+      ['WhatsApp account tool','249'],
+      ['Call recording account tool','249'],
+      ['Phishing io tool','249']
+    ];
+
+    function renderServices(){
+      el.svcList.innerHTML = '';
+      services.forEach(s => {
+        const li = document.createElement('li');
+        li.innerHTML = `<div>
+            <strong>${s[0]}</strong>
+            <div class="muted-inline">— quick review & recommendations</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="tag">₹${s[1]}</span>
+            <button class="btn btn-primary" data-svc="${s[0]}|${s[1]}" aria-label="Buy ${s[0]}">Buy</button>
+          </div>`;
+        el.svcList.appendChild(li);
+      });
+    }
 
     // ---------- Helpers ----------
     function goTo(page){
@@ -295,12 +268,14 @@
 
     function decodeUpi(){
       try{
+        if(!ENC_UPI || ENC_UPI === 'REPLACE_WITH_BASE64_UPI') return '— (set ENC_UPI) —';
         return atob(ENC_UPI);
-      }catch(e){ return '7872873837@ybl'; }
+      }catch(e){
+        return '— invalid-upi-encoding —';
+      }
     }
 
     function sanitizePrice(price){
-      // ensure numeric, two decimals not needed for INR as rupee integer
       const n = parseFloat(price);
       return isNaN(n) ? '' : Math.round(n).toString();
     }
@@ -315,13 +290,12 @@
     }
 
     function qrImageUrl(uri, size=440){
-      // qrserver allows size and data; add timestamp to prevent caching during testing
       return 'https://api.qrserver.com/v1/create-qr-code/?size='+size+'x'+size+'&data='+encodeURIComponent(uri);
     }
 
     function generateAndShowQr(){
       const uri = buildUpiUri();
-      const imgsrc = qrImageUrl(uri,440)+'&t='+Date.now();
+      const imgsrc = qrImageUrl(uri,520)+'&t='+Date.now();
       el.qrimg.src = imgsrc;
       const [name,price] = (state.selectedSvc||'').split('|');
       el.payLine.textContent = (name ? name+' — ₹'+price : 'Please scan the QR or use Pay Now.');
@@ -329,14 +303,13 @@
       // store final url for download (convert image to dataURL after load)
       el.qrimg.onload = async () => {
         try{
-          // convert image blob to dataURL for download
           const resp = await fetch(el.qrimg.src);
           const blob = await resp.blob();
           const reader = new FileReader();
           reader.onload = () => { state.lastQrDataUrl = reader.result; };
           reader.readAsDataURL(blob);
         }catch(err){
-          // ignore if blocked
+          // ignore if blocked by CORS or network
         }
       };
     }
@@ -354,9 +327,24 @@
     }
 
     // ---------- Event wiring ----------
-    el.svcBtns.forEach(btn => btn.addEventListener('click', () => selectService(btn.getAttribute('data-svc'))));
-    el.btnBackToServices.addEventListener('click', () => goTo('services'));
-    el.btnBackToCheckout.addEventListener('click', () => goTo('checkout'));
+    renderServices();
+    el.svcList.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-svc]');
+      if(btn) selectService(btn.getAttribute('data-svc'));
+    });
+
+    el.btnBackToServices.addEventListener('click', () => {
+      state.selectedSvc = null;
+      el.mobile.value = ''; el.buyerName.value = ''; el.chosenSvc.textContent = '— service not selected —';
+      clearAppSelectionUI();
+      el.payNowBtn.classList.add('hidden');
+      el.upiText.textContent = decodeUpi();
+      goTo('services');
+    });
+
+    el.btnBackToCheckout.addEventListener('click', () => {
+      goTo('checkout');
+    });
 
     el.btnProceed.addEventListener('click', () => {
       if(!state.selectedSvc){ alert('कृपया पहले कोई सर्विस चुनें।'); return; }
@@ -403,7 +391,6 @@
     el.payNowBtn.addEventListener('click', () => {
       if(!state.selectedApp){ alert('कृपया पेमेंट ऐप चुनें।'); return; }
       if(state.selectedApp === 'gpay'){
-        // try intent first, then fallback to UPI uri
         window.location.href = intentForPackage(PKG_GPAY);
         setTimeout(()=>{ window.location.href = buildUpiUri(); }, 900);
       } else if(state.selectedApp === 'phonepe'){
@@ -430,17 +417,14 @@
       }
     });
 
-    // Home / reset button
-    // (No success screen; just reset state when user returns home)
-    // For convenience, allow back-to-services from checkout or payment via header - here we wire a minimal home reset
+    // Home / reset button (Escape to reset)
     document.addEventListener('keydown', (e) => {
-      // optional: escape to go home if on checkout/payment (non-intrusive)
       if(e.key === 'Escape'){
         state.selectedSvc = null; state.buyer = null; state.selectedApp = null; state.lastQrDataUrl = null;
         el.mobile.value = ''; el.buyerName.value = ''; el.chosenSvc.textContent = '— service not selected —';
         clearAppSelectionUI();
         el.payNowBtn.classList.add('hidden');
-        el.upiText.textContent = '—';
+        el.upiText.textContent = decodeUpi();
         goTo('services');
       }
     });
@@ -448,13 +432,34 @@
     // set current year
     el.year.textContent = new Date().getFullYear();
 
-    // expose decoded UPI in UI on load (obfuscated in source)
+    // show UPI decode hint on load (placeholder unless replaced)
     document.addEventListener('DOMContentLoaded', () => {
       el.upiText.textContent = decodeUpi();
     });
 
-    // small progressive enhancement: show Pay Now after decode if app preselected (rare)
-    // (no external dependencies)
+    // helper: runtime set plain upi for local dev
+    function setPlainUpi(plainUpi){
+      try{
+        const encoded = btoa(plainUpi);
+        window.ENC_UPI_RUNTIME = encoded;
+        window.decodeUpi = function(){
+          try{
+            return atob(window.ENC_UPI_RUNTIME || ENC_UPI);
+          }catch(e){
+            return '— invalid-upi-encoding —';
+          }
+        };
+        el.upiText.textContent = window.decodeUpi();
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+    // expose to console for quick dev/testing
+    window.setPlainUpi = setPlainUpi;
+
+    // start on services
+    goTo('services');
   </script>
 </body>
-</html>
+  </html>                            
